@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "backend"
+		},
+		{
+			"path": "shopui"
+		}
+	],
+	"settings": {
+		"prisma.pinToPrisma6": false
+	}
+}
