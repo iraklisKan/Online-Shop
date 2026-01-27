@@ -31,19 +31,19 @@ export class AuthService {
 
   async login(user: User, response: Response) {
     const expires = new Date();
-    const expiresInStr = this.configService.getOrThrow<string>(
-      'JWT_COOKIE_EXPIRES_IN',
+    expires.setMilliseconds(
+      expires.getMilliseconds() +
+        ms(this.configService.getOrThrow('JWT_EXPIRATION') as ms.StringValue),
     );
-    const milliseconds = ms(expiresInStr as ms.StringValue);
-    expires.setMilliseconds(expires.getMilliseconds() + milliseconds);
 
-    const tokenPayload: TokenPayload = { userId: user.id };
+    const tokenPayload: TokenPayload = {
+      userId: user.id,
+    };
     const token = this.jwtService.sign(tokenPayload);
 
     response.cookie('Authentication', token, {
       httpOnly: true,
       secure: true,
-      expires,
     });
 
     return { tokenPayload };
