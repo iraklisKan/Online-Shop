@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { User, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserRequest } from './dto/create-user.request';
 import { Injectable, ConflictException } from '@nestjs/common';
@@ -30,4 +30,10 @@ export class UsersService {
       throw error;
     }
   }
+  async getUser(filter: Prisma.UserWhereUniqueInput) {
+    return this.prismaService.user.findUniqueOrThrow({
+      where: filter,
+    });
+  }
+
 }
