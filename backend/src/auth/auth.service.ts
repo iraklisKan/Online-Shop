@@ -44,6 +44,7 @@ export class AuthService {
     response.cookie('Authentication', token, {
       httpOnly: true,
       secure: true,
+      expires
     });
 
     return { tokenPayload };
