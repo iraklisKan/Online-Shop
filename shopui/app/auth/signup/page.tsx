@@ -12,25 +12,23 @@ export default function Signup() {
   });
 
   return (
-    <form action={formAction}>
-      <Stack spacing={2} className="w-full max-w-xs">
+    <form action={formAction} className="w-full max-w-xs">
+      <Stack spacing={2}>
         <TextField
-          placeholder="Email"
+          label="Email"
           variant="outlined"
           type="email"
           name="email"
           helperText={state.emailError}
           error={!!state.emailError}
-          required
         />
         <TextField
-          placeholder="Password"
+          label="Password"
           variant="outlined"
           type="password"
           name="password"
           helperText={state.passwordError}
           error={!!state.passwordError}
-          required
         />
         <Button type="submit" variant="contained">
           Signup
