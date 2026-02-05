@@ -43,10 +43,10 @@ export class AuthService {
 
     response.cookie('Authentication', token, {
       httpOnly: true,
-      secure: true,
+      secure: this.configService.get('NODE_ENV') === 'production',
       expires
     });
 
-    return { tokenPayload };
+    return { tokenPayload, token };
   }
 }
