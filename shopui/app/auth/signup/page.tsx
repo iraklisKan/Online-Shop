@@ -6,10 +6,7 @@ import { useActionState } from "react";
 import createUser from "./create-user";
 
 export default function Signup() {
-  const [state, formAction] = useActionState(createUser, {
-    emailError: "",
-    passwordError: "",
-  });
+  const [state, formAction] = useActionState(createUser, {});
 
   return (
     <form action={formAction} className="w-full max-w-xs">

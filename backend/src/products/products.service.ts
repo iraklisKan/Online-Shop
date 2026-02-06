@@ -10,11 +10,14 @@ export class ProductsService {
     userId: number,
   ) {
     return this.prismaService.product.create({
-        data:{
-            ...createProductRequest,
-            userId,
-        }
-    })
-        }
+      data: {
+        ...createProductRequest,
+        userId,
+      },
+    });
   }
 
+  async getProducts() {
+    return this.prismaService.product.findMany();
+  }
+}

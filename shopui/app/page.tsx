@@ -1,10 +1,11 @@
-import Image from "next/image";
-import getMe from "./get-me";
+
+import { get } from "http";
+import CreateProductFab from "./products/create-product/create-product-fab";
+import getProducts from "./products/actions/get-products";
 
 export default async function Home() {
-  const me = await getMe();
-  console.log("Current user:", me);
+  const products= await getProducts();
   return (
-   <></>
+    <CreateProductFab />
   );
 }

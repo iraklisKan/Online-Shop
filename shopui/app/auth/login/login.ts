@@ -1,14 +1,18 @@
 "use server";
 
 import { API_URL } from "@/app/common/constants/api";
-import { FormError } from "@/app/common/interfaces/form-error.interface";
+import { FormResponse } from "@/app/common/interfaces/form-response.interface";
 import { getErrorMessage } from "@/app/common/util/errors";
+import { parseFieldError } from "@/app/common/util/parse-error";
 import { redirect } from "next/navigation";
 import { cookies } from "next/dist/server/request/cookies";
 import { jwtDecode } from "jwt-decode";
 import { AUTHENTICATION_COOKIE } from "../auth-cookie";
 
-export default async function login(_prevState: FormError, formData: FormData) {
+export default async function login(
+  _prevState: FormResponse,
+  formData: FormData,
+) {
   const res = await fetch(`${API_URL}/auth/login`, {
     method: "POST",
     headers: {
@@ -19,15 +23,7 @@ export default async function login(_prevState: FormError, formData: FormData) {
   const resData = await res.json();
   if (!res.ok) {
     const errorMessage = getErrorMessage(resData);
-    const lowerMessage = errorMessage.toLowerCase();
-
-    if (lowerMessage.includes("email")) {
-      return { emailError: errorMessage, passwordError: "" };
-    }
-    if (lowerMessage.includes("password")) {
-      return { emailError: "", passwordError: errorMessage };
-    }
-    return { emailError: errorMessage, passwordError: "" };
+    return parseFieldError(errorMessage);
   }
 
   // Set auth cookie before redirect
