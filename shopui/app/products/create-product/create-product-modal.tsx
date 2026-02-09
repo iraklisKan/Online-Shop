@@ -5,9 +5,12 @@ import Modal from "@mui/material/Modal";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { useState } from "react";
-import { FormResponse } from "../common/interfaces/form-response.interface";
+import { CSSProperties, useState } from "react";
+import { useRouter } from "next/navigation";
+import { FormResponse } from "../../common/interfaces/form-response.interface";
 import createProduct from "../actions/create-product";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import Typography from "@mui/material/Typography";
 
 const styles = {
   position: "absolute" as "absolute",
@@ -21,6 +24,18 @@ const styles = {
   p: 4,
 };
 
+const fileInputStyles: CSSProperties = {
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: "1px",
+  overflow: "hidden",
+  position: "absolute" as "absolute",
+  whiteSpace: "nowrap" as "nowrap",
+  width: "1px",
+  bottom: 0,
+  left: 0,
+};
+
 interface CreateProductModalProps {
   open: boolean;
   handleClose: () => void;
@@ -30,9 +45,13 @@ export default function CreateProductModal({
   handleClose,
 }: CreateProductModalProps) {
   const [response, setResponse] = useState<FormResponse>();
+  const [fileName, setFileName] = useState("");
+  const router = useRouter();
+
   const onClose = () => {
     setResponse(undefined);
     handleClose();
+    setFileName("");
   };
 
   return (
@@ -50,6 +69,7 @@ export default function CreateProductModal({
               !response.descriptionError &&
               !response.priceError
             ) {
+              router.refresh(); // Instant UI update
               onClose();
             }
           }}
@@ -62,6 +82,7 @@ export default function CreateProductModal({
               helperText={response?.nameError}
               error={!!response?.nameError}
               required
+              InputLabelProps={{ required: false }}
             />
             <TextField
               label="Description"
@@ -70,6 +91,7 @@ export default function CreateProductModal({
               helperText={response?.descriptionError}
               error={!!response?.descriptionError}
               required
+              InputLabelProps={{ required: false }}
             />
             <TextField
               label="Price"
@@ -79,7 +101,24 @@ export default function CreateProductModal({
               helperText={response?.priceError}
               error={!!response?.priceError}
               required
+              InputLabelProps={{ required: false }}
             />
+            <Button
+              component="label"
+              variant="outlined"
+              startIcon={<CloudUploadIcon />}
+            >
+              Upload File
+              <input
+                type="file"
+                name="image"
+                style={fileInputStyles}
+                onChange={(e) =>
+                  e.target.files && setFileName(e.target.files[0].name)
+                }
+              />
+            </Button>
+            <Typography >{fileName}</Typography>
             <Button type="submit" variant="contained">
               Create Product
             </Button>

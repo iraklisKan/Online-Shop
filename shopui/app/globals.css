@@ -1,1 +1,42 @@
 @import "tailwindcss";
+
+/* Dark scrollbar styling */
+*,
+*::before,
+*::after,
+html,
+body {
+  scrollbar-width: thin;
+  scrollbar-color: #555 #1e1e1e;
+}
+
+*::-webkit-scrollbar,
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background: #1e1e1e;
+}
+
+*::-webkit-scrollbar-track,
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+
+*::-webkit-scrollbar-thumb,
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb:hover,
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
+
+*::-webkit-scrollbar-corner {
+  background: #1e1e1e;
+}
