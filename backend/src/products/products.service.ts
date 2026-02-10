@@ -3,7 +3,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductRequest } from './dto/create-product.request';
 import { promises as fs } from 'fs';
 import { join } from 'path';
-import { PRODUCT_IMAGES } from './product-images';
+import { PRODUCT_IMAGES } from './constants/product-images';
 
 @Injectable()
 export class ProductsService {

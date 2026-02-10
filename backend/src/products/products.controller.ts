@@ -19,7 +19,7 @@ import { UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { PRODUCT_IMAGES } from './product-images';
+import { PRODUCT_IMAGES } from './constants/product-images';
 
 @Controller('products')
 export class ProductsController {
