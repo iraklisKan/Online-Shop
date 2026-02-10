@@ -26,11 +26,9 @@ export default async function login(
     return parseFieldError(errorMessage);
   }
 
-  // Set auth cookie before redirect
-  const setCookieHeader = res.headers.get("Set-Cookie");
-
-  if (setCookieHeader) {
-    const token = setCookieHeader.split(";")[0].split("=")[1];
+  // Set auth cookie using token from response body
+  const token = resData.token;
+  if (token) {
     const decoded = jwtDecode<{ exp: number }>(token);
     const cookieStore = await cookies();
     cookieStore.set({
@@ -43,5 +41,5 @@ export default async function login(
     });
   }
 
-  redirect("/");
+  return { success: true };
 }

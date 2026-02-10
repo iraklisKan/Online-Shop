@@ -13,5 +13,5 @@ export default async function createUser(_prevState: FormResponse, formData: For
   if (result) {
     return result;
   }
-  redirect("/");
+  return { success: true };
 }

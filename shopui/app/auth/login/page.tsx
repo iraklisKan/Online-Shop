@@ -2,13 +2,22 @@
 
 import NextLink from "next/link";
 import { Stack, TextField, Button, Link } from "@mui/material";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import login from "./login";
 
 
 
 export default function Login() {
+  const router = useRouter();
   const [state, formAction] = useActionState(login, { emailError: "", passwordError: "" });
+  
+  useEffect(() => {
+    if (state.success) {
+      router.push("/");
+    }
+  }, [state.success, router]);
+
   return (
     <form action={formAction} className="w-full max-w-xs">
       <Stack spacing={2}>
