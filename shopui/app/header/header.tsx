@@ -39,11 +39,11 @@ export default function Header({ logout }: HeaderProps) {
   const pages = IsAuthenticated ? routes : unauthenticatedRoutes;
 
   return (
-    <AppBar position="static">
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
+    <AppBar position="sticky">
+      <Container maxWidth="lg">
+        <Toolbar disableGutters sx={{ py: 0.5 }}>
           <ShoppingBasketIcon
-            sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
+            sx={{ display: { xs: "none", md: "flex" }, mr: 1, color: "primary.main" }}
           />
           <Typography
             variant="h6"
@@ -51,13 +51,13 @@ export default function Header({ logout }: HeaderProps) {
             component={Link}
             href="/"
             sx={{
-              mr: 2,
+              mr: 4,
               display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: ".3rem",
+              letterSpacing: ".15rem",
               color: "inherit",
               textDecoration: "none",
+              fontSize: "1.3rem",
             }}
           >
             Shoppy
@@ -66,7 +66,7 @@ export default function Header({ logout }: HeaderProps) {
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
-              aria-label="account of current user"
+              aria-label="navigation menu"
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
@@ -106,7 +106,7 @@ export default function Header({ logout }: HeaderProps) {
             </Menu>
           </Box>
           <ShoppingBasketIcon
-            sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
+            sx={{ display: { xs: "flex", md: "none" }, mr: 1, color: "primary.main" }}
           />
           <Typography
             variant="h5"
@@ -117,16 +117,15 @@ export default function Header({ logout }: HeaderProps) {
               mr: 2,
               display: { xs: "flex", md: "none" },
               flexGrow: 1,
-              fontFamily: "monospace",
               fontWeight: 700,
-              letterSpacing: ".3rem",
+              letterSpacing: ".15rem",
               color: "inherit",
               textDecoration: "none",
             }}
           >
             Shoppy
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" }, gap: 0.5 }}>
             {pages.map((page) => (
               <Button
                 key={page.title}
@@ -134,7 +133,16 @@ export default function Header({ logout }: HeaderProps) {
                   handleCloseNavMenu();
                   router.push(page.path);
                 }}
-                sx={{ my: 2, color: "white", display: "block" }}
+                sx={{
+                  my: 2,
+                  color: "text.secondary",
+                  display: "block",
+                  px: 2,
+                  "&:hover": {
+                    color: "text.primary",
+                    backgroundColor: "rgba(255, 255, 255, 0.04)",
+                  },
+                }}
               >
                 {page.title}
               </Button>

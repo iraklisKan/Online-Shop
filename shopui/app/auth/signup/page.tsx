@@ -1,7 +1,7 @@
 "use client";
 
 import NextLink from "next/link";
-import { Stack, TextField, Button, Link } from "@mui/material";
+import { Stack, TextField, Button, Link, Typography } from "@mui/material";
 import { useActionState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import createUser from "./create-user";
@@ -17,8 +17,14 @@ export default function Signup() {
   }, [state.success, router]);
 
   return (
-    <form action={formAction} className="w-full max-w-xs">
-      <Stack spacing={2}>
+    <form action={formAction}>
+      <Stack spacing={3}>
+        <Typography variant="h5" sx={{ fontWeight: 700, textAlign: "center" }}>
+          Create account
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ textAlign: "center", mt: -1 }}>
+          Get started with Shoppy
+        </Typography>
         <TextField
           label="Email"
           variant="outlined"
@@ -26,6 +32,7 @@ export default function Signup() {
           name="email"
           helperText={state.emailError}
           error={!!state.emailError}
+          fullWidth
         />
         <TextField
           label="Password"
@@ -34,13 +41,17 @@ export default function Signup() {
           name="password"
           helperText={state.passwordError}
           error={!!state.passwordError}
+          fullWidth
         />
-        <Button type="submit" variant="contained">
-          Signup
+        <Button type="submit" variant="contained" size="large" fullWidth>
+          Create Account
         </Button>
-        <Link component={NextLink} href="/auth/login" className="self-center">
-          Login
-        </Link>
+        <Typography variant="body2" color="text.secondary" sx={{ textAlign: "center" }}>
+          Already have an account?{" "}
+          <Link component={NextLink} href="/auth/login" sx={{ fontWeight: 600 }}>
+            Sign in
+          </Link>
+        </Typography>
       </Stack>
     </form>
   );
