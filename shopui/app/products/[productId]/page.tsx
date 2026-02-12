@@ -2,9 +2,9 @@ import getProduct from "./get-product";
 import { Grid, Stack, Typography, Box, Chip, Divider, Button } from "@mui/material";
 import Image from "next/image";
 import { getProductImage } from "../product-image";
-import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Link from "next/link";
+import Checkout from "@/app/checkout/checkout";
 
 interface SingleProductProps {
   params: Promise<{
@@ -17,34 +17,34 @@ export default async function SingleProduct({ params }: SingleProductProps) {
   const product = await getProduct(+productId);
   return (
     <Box>
-      <Button
-        component={Link}
-        href="/"
-        startIcon={<ArrowBackIcon />}
-        sx={{
-          mb: 4,
-          color: "text.secondary",
-          "&:hover": { color: "text.primary" },
-        }}
-      >
-        Back to Products
-      </Button>
+      <Link href="/" passHref style={{ textDecoration: 'none' }}>
+        <Button
+          startIcon={<ArrowBackIcon />}
+          sx={{
+            mb: 4,
+            color: "text.secondary",
+            "&:hover": { color: "text.primary" },
+          }}
+        >
+          Back to Products
+        </Button>
+      </Link>
 
       <Grid container spacing={6} alignItems="flex-start">
-        {/* Image section */}
-        <Grid size={{ md: 6, xs: 12 }}>
-          <Box
-            sx={{
-              position: "relative",
-              width: "100%",
-              aspectRatio: "1 / 1",
-              borderRadius: 3,
-              overflow: "hidden",
-              backgroundColor: "rgba(255, 255, 255, 0.03)",
-              border: "1px solid rgba(255, 255, 255, 0.06)",
-            }}
-          >
-            {product.imageExists ? (
+        {/* Image section - only show if image exists */}
+        {product.imageExists && (
+          <Grid size={{ md: 6, xs: 12 }}>
+            <Box
+              sx={{
+                position: "relative",
+                width: "100%",
+                aspectRatio: "1 / 1",
+                borderRadius: 3,
+                overflow: "hidden",
+                backgroundColor: "rgba(255, 255, 255, 0.03)",
+                border: "1px solid rgba(255, 255, 255, 0.06)",
+              }}
+            >
               <Image
                 src={getProductImage(product.id)}
                 alt={product.name}
@@ -53,24 +53,12 @@ export default async function SingleProduct({ params }: SingleProductProps) {
                 sizes="(max-width: 900px) 100vw, 50vw"
                 unoptimized
               />
-            ) : (
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  height: "100%",
-                  color: "text.secondary",
-                }}
-              >
-                <ShoppingBagOutlinedIcon sx={{ fontSize: 80, opacity: 0.2 }} />
-              </Box>
-            )}
-          </Box>
-        </Grid>
+            </Box>
+          </Grid>
+        )}
 
         {/* Product info */}
-        <Grid size={{ md: 6, xs: 12 }}>
+        <Grid size={{ md: product.imageExists ? 6 : 12, xs: 12 }}>
           <Stack gap={3}>
             <Typography variant="h3" sx={{ fontWeight: 700, lineHeight: 1.2 }}>
               {product.name}
@@ -100,6 +88,7 @@ export default async function SingleProduct({ params }: SingleProductProps) {
               >
                 {product.description}
               </Typography>
+              <Checkout productId={product.id}></Checkout>
             </Box>
           </Stack>
         </Grid>

@@ -11,7 +11,8 @@ export const getHeaders = async () => {
   };
 };
 
-export const post = async (path: string, formData: FormData) => {
+export const post = async (path: string, data: FormData | object) => {
+  const body = data instanceof FormData ? data : JSON.stringify(data);
   const headers = await getHeaders();
   const res = await fetch(`${API_URL}/${path}`, {
     method: "POST",
@@ -19,7 +20,7 @@ export const post = async (path: string, formData: FormData) => {
       ...headers,
       // Don't set Content-Type - browser will set it automatically with boundary for multipart/form-data
     },
-    body: formData, // Send FormData directly to preserve files
+    body: body, // Send FormData directly to preserve files
   });
   const resData = await res.json();
   if (!res.ok) {
