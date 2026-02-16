@@ -6,7 +6,8 @@ export const parseFieldError = (errorMessage: string): FormResponse => {
   if (lowerMessage.includes("email")) return { emailError: errorMessage };
   if (lowerMessage.includes("password")) return { passwordError: errorMessage };
   if (lowerMessage.includes("name")) return { nameError: errorMessage };
-  if (lowerMessage.includes("description")) return { descriptionError: errorMessage };
+  if (lowerMessage.includes("description"))
+    return { descriptionError: errorMessage };
   if (lowerMessage.includes("price")) return { priceError: errorMessage };
 
   return { error: errorMessage };

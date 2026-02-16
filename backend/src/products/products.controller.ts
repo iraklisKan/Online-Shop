@@ -9,6 +9,7 @@ import {
   UseGuards,
   FileTypeValidator,
   Param,
+  Query,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateProductRequest } from './dto/create-product.request';
@@ -38,8 +39,10 @@ export class ProductsController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async getProducts() {
-    return this.productsService.getProducts();
+  async getProducts(
+    @Query('status') status?:string,
+  ) {
+    return this.productsService.getProducts(status);
   }
 
   @Post(':productId/image')

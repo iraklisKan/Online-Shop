@@ -2,6 +2,7 @@ import { cookies } from "next/dist/server/request/cookies";
 import { API_URL } from "../constants/api";
 import { getErrorMessage } from "./errors";
 import { parseFieldError } from "./parse-error";
+import { URLSearchParams } from "url";
 
 export const getHeaders = async () => {
   const cookieStore = await cookies();
@@ -27,7 +28,7 @@ export const post = async (path: string, data: FormData | object) => {
     const errorMessage = getErrorMessage(resData);
     return parseFieldError(errorMessage);
   }
-  return {error:"",data: resData};
+  return { error: "", data: resData };
 };
 
 export const postJson = async (path: string, data: object) => {
@@ -48,9 +49,14 @@ export const postJson = async (path: string, data: object) => {
   return { data: resData, error: undefined };
 };
 
-export const get = async <T>(path: string, tags?: string[]) => {
+export const get = async <T>(
+  path: string,
+  tags?: string[],
+  params?: URLSearchParams,
+) => {
+  const url = params ? `${API_URL}/${path}?` + params : `${API_URL}/${path}`;
   const headers = await getHeaders();
-  const res = await fetch(`${API_URL}/${path}`, {
+  const res = await fetch(url, {
     headers: { ...headers },
     next: { tags: tags },
   });

@@ -4,6 +4,7 @@ import { CreateProductRequest } from './dto/create-product.request';
 import { promises as fs } from 'fs';
 import { join } from 'path';
 import { PRODUCT_IMAGES } from './constants/product-images';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class ProductsService {
@@ -20,8 +21,12 @@ export class ProductsService {
     });
   }
 
-  async getProducts() {
-    const products = await this.prismaService.product.findMany();
+  async getProducts(status?: string) {
+    const args: Prisma.ProductFindManyArgs = {};
+    if (status === 'available') {
+      args.where = { sold: false };
+    }
+    const products = await this.prismaService.product.findMany(args);
     return Promise.all(
       products.map(async (product) => ({
         ...product,
@@ -56,5 +61,14 @@ export class ProductsService {
     } catch (error) {
       throw new NotFoundException(`Product not found with ID ${productId}`);
     }
+  }
+
+  async update(productId: number, data: Prisma.ProductUpdateInput) {
+    await this.prismaService.product.update({
+      where: {
+        id: productId,
+      },
+      data,
+    });
   }
 }

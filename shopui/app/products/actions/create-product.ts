@@ -5,7 +5,6 @@ import { FormResponse } from "../../common/interfaces/form-response.interface";
 import { revalidatePath } from "next/cache";
 import { API_URL } from "@/app/common/constants/api";
 
-
 export default async function createProduct(
   formData: FormData,
 ): Promise<FormResponse> {
@@ -14,7 +13,7 @@ export default async function createProduct(
     description: formData.get("description"),
     price: Number(formData.get("price")),
   };
-  
+
   const response = await postJson("products", data);
 
   // Upload product image if provided and product was created successfully
