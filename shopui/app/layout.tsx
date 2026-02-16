@@ -29,7 +29,7 @@ export default async function RootLayout({
 }>) {
   const isAuthenticated = await authenticated();
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning

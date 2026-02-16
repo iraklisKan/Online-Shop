@@ -52,6 +52,7 @@ export default function Product({ product }: ProductProps) {
               fill
               style={{ objectFit: "cover" }}
               sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw"
+              loading="eager"
               unoptimized
             />
           ) : (
