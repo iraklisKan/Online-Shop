@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  # ── Database ────────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16
+    container_name: online_shop_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-online_shop}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - online_shop_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-online_shop}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: online_shop_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - online_shop_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ── Backend (NestJS) ────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: online_shop_backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      # Override DB connection to use the Docker service name instead of localhost
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-online_shop}?schema=public
+      POSTGRES_HOST: postgres
+    ports:
+      - "3001:3001"
+    networks:
+      - online_shop_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ── Frontend (Next.js) ──────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./shopui
+      dockerfile: Dockerfile
+      args:
+        # Baked into the client-side JS bundle at build time
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001}
+        BACKEND_HOSTNAME: ${BACKEND_HOSTNAME:-localhost}
+        BACKEND_PORT: ${BACKEND_PORT:-3001}
+    container_name: online_shop_frontend
+    restart: unless-stopped
+    environment:
+      # Server-side (SSR) uses the internal Docker network URL
+      API_URL: http://backend:3001
+    ports:
+      - "3000:3000"
+    networks:
+      - online_shop_network
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+
+networks:
+  online_shop_network:
+    driver: bridge
