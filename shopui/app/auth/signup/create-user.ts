@@ -6,7 +6,7 @@ import { getErrorMessage } from "@/app/common/util/errors";
 import { post } from "@/app/common/util/fetch";
 import { FormResponse } from "@/app/common/interfaces/form-response.interface";
 
-export default async function createUser(_prevState: FormResponse, formData: FormData) {
+export default async function createUser(_prevState: FormResponse, formData: FormData): Promise<FormResponse> {
   const data = Object.fromEntries(formData);
 
   const result = await post("users", formData);

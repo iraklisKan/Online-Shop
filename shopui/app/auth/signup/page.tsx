@@ -5,10 +5,11 @@ import { Stack, TextField, Button, Link, Typography } from "@mui/material";
 import { useActionState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import createUser from "./create-user";
+import type { FormResponse } from "../../common/interfaces/form-response.interface";
 
 export default function Signup() {
   const router = useRouter();
-  const [state, formAction] = useActionState(createUser, {});
+  const [state, formAction] = useActionState<FormResponse, FormData>(createUser, {});
 
   useEffect(() => {
     if (state.success) {

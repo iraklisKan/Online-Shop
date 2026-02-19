@@ -2,8 +2,13 @@
 FROM node:22-alpine AS builder
 WORKDIR /app
 
+RUN apk add --no-cache openssl
+
 COPY package*.json ./
 RUN npm ci
+
+COPY prisma ./prisma
+RUN npx prisma generate
 
 COPY . .
 RUN npm run build
@@ -11,6 +16,8 @@ RUN npm run build
 # ── Stage 2: production ──────────────────────────────────────────────────────
 FROM node:22-alpine AS production
 WORKDIR /app
+
+RUN apk add --no-cache openssl
 
 ENV NODE_ENV=production
 
