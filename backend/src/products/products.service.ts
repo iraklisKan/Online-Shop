@@ -29,10 +29,22 @@ export class ProductsService {
     return product;
   }
 
-  async getProducts(status?: string) {
-    const args: Prisma.ProductFindManyArgs = {};
+  async getProducts(status?: string, search?: string, categoryId?: number) {
+    const args: Prisma.ProductFindManyArgs = { where: {} };
     if (status === 'available') {
-      args.where = { sold: false };
+      args.where = { ...args.where, sold: false };
+    }
+    if (search) {
+      args.where = {
+        ...args.where,
+        OR: [
+          { name: { contains: search, mode: 'insensitive' } },
+          { description: { contains: search, mode: 'insensitive' } },
+        ],
+      };
+    }
+    if (categoryId) {
+      args.where = { ...args.where, categoryId };
     }
     const products = await this.prismaService.product.findMany(args);
     return Promise.all(

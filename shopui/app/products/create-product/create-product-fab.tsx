@@ -5,14 +5,20 @@ import AddIcon from "@mui/icons-material/Add";
 import Tooltip from "@mui/material/Tooltip";
 import CreateProductModal from "./create-product-modal";
 import { useState } from "react";
+import type { Category } from "../interfaces/product.interface";
 
-export default function CreateProductFab() {
+interface CreateProductFabClientProps {
+  categories: Category[];
+}
+
+export default function CreateProductFab({ categories }: CreateProductFabClientProps) {
   const [modalVisible, setModalVisible] = useState(false);
   return (
     <>
       <CreateProductModal
         open={modalVisible}
         handleClose={() => setModalVisible(false)}
+        categories={categories}
       />
       <Tooltip title="Add product" placement="left">
         <Fab

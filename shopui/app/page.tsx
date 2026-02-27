@@ -1,15 +1,22 @@
-
-import { get } from "http";
 import CreateProductFab from "./products/create-product/create-product-fab";
-import getProducts from "./products/actions/get-products";
 import Products from "./products/products";
+import getCategories from "./categories/actions/get-categories";
 
-export default async function Home() {
-  const products= await getProducts();
+interface HomePageProps {
+  searchParams?: Promise<{ search?: string; categoryId?: string }>;
+}
+
+export default async function Home({ searchParams }: HomePageProps) {
+  const params = await searchParams;
+  const categories = await getCategories();
   return (
     <>
-      <Products/>
-      <CreateProductFab/>
-      </>
+      <Products
+        search={params?.search}
+        categoryId={params?.categoryId ? Number(params.categoryId) : undefined}
+        categories={categories ?? []}
+      />
+      <CreateProductFab categories={categories ?? []} />
+    </>
   );
 }

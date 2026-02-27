@@ -1,11 +1,14 @@
 "use client"
 
-import { Card, CardActionArea, Box, Typography, Chip } from "@mui/material";
+import { Card, CardActionArea, Box, Typography, Chip, IconButton, Tooltip } from "@mui/material";
 import { Product as Iproduct } from "./interfaces/product.interface";
 import Image from "next/image";
 import { getProductImage } from "./product-image";
 import { useRouter } from "next/navigation";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
+import { useCart, toCartItem } from "../cart/cart-context";
 
 interface ProductProps {
   product: Iproduct;
@@ -13,6 +16,18 @@ interface ProductProps {
 
 export default function Product({ product }: ProductProps) {
   const router = useRouter();
+  const { add, remove, isInCart, openDrawer } = useCart();
+  const inCart = isInCart(product.id);
+
+  const handleCartToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (inCart) {
+      remove(product.id);
+    } else {
+      add(toCartItem(product));
+      openDrawer();
+    }
+  };
   return (
     <Card
       sx={{
@@ -108,10 +123,44 @@ export default function Product({ product }: ProductProps) {
               mt: 0.5,
             }}
           >
-            ${product.price}
+            €{product.price.toFixed(2)}
           </Typography>
         </Box>
       </CardActionArea>
+
+      {/* Add/Remove cart button */}
+      <Box
+        sx={{
+          px: 2.5,
+          pb: 2,
+          display: "flex",
+          justifyContent: "flex-end",
+        }}
+      >
+        <Tooltip title={inCart ? "Remove from cart" : "Add to cart"}>
+          <IconButton
+            size="small"
+            onClick={handleCartToggle}
+            sx={{
+              color: inCart ? "primary.main" : "text.secondary",
+              backgroundColor: inCart
+                ? "rgba(124, 77, 255, 0.1)"
+                : "rgba(255,255,255,0.04)",
+              "&:hover": {
+                backgroundColor: inCart
+                  ? "rgba(124, 77, 255, 0.2)"
+                  : "rgba(255,255,255,0.08)",
+              },
+            }}
+          >
+            {inCart ? (
+              <RemoveShoppingCartIcon fontSize="small" />
+            ) : (
+              <AddShoppingCartIcon fontSize="small" />
+            )}
+          </IconButton>
+        </Tooltip>
+      </Box>
     </Card>
   );
 }

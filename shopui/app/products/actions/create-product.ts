@@ -8,10 +8,12 @@ import { API_URL } from "@/app/common/constants/api";
 export default async function createProduct(
   formData: FormData,
 ): Promise<FormResponse> {
+  const categoryIdRaw = formData.get("categoryId");
   const data = {
     name: formData.get("name"),
     description: formData.get("description"),
     price: Number(formData.get("price")),
+    ...(categoryIdRaw ? { categoryId: Number(categoryIdRaw) } : {}),
   };
 
   const response = await postJson("products", data);

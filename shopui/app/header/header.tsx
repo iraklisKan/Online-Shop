@@ -13,20 +13,25 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import Badge from "@mui/material/Badge";
 import { AuthContext } from "../auth/auth-context";
 import { useContext, useState } from "react";
-import { unauthenticatedRoutes, routes } from "../common/constants/routes";
+import { unauthenticatedRoutes, routes, adminRoutes } from "../common/constants/routes";
 import Link from "next/link";
 import { useRouter as userRouter } from "next/navigation";
+import { useCart } from "../cart/cart-context";
 
 interface HeaderProps {
   logout: () => Promise<void>;
 }
 
 export default function Header({ logout }: HeaderProps) {
-  const IsAuthenticated = useContext(AuthContext);
+  const { authenticated: IsAuthenticated, role } = useContext(AuthContext);
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const router = userRouter();
+
+  const { count: cartCount, openDrawer } = useCart();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -36,7 +41,11 @@ export default function Header({ logout }: HeaderProps) {
     setAnchorElNav(null);
   };
 
-  const pages = IsAuthenticated ? routes : unauthenticatedRoutes;
+  const pages = IsAuthenticated
+    ? role === "ADMIN"
+      ? adminRoutes
+      : routes
+    : unauthenticatedRoutes;
 
   return (
     <AppBar position="sticky">
@@ -148,6 +157,15 @@ export default function Header({ logout }: HeaderProps) {
               </Button>
             ))}
           </Box>
+          {IsAuthenticated && (
+            <Tooltip title="Cart">
+              <IconButton onClick={openDrawer} color="inherit" sx={{ mr: 0.5 }}>
+                <Badge badgeContent={cartCount || undefined} color="primary">
+                  <ShoppingCartIcon />
+                </Badge>
+              </IconButton>
+            </Tooltip>
+          )}
           {IsAuthenticated && <Settings logout={logout} />}
         </Toolbar>
       </Container>

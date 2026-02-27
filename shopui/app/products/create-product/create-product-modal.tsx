@@ -5,12 +5,14 @@ import Modal from "@mui/material/Modal";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import MenuItem from "@mui/material/MenuItem";
 import { CSSProperties, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FormResponse } from "../../common/interfaces/form-response.interface";
 import createProduct from "../actions/create-product";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Typography from "@mui/material/Typography";
+import type { Category } from "../interfaces/product.interface";
 
 const styles = {
   position: "absolute" as "absolute",
@@ -40,10 +42,12 @@ const fileInputStyles: CSSProperties = {
 interface CreateProductModalProps {
   open: boolean;
   handleClose: () => void;
+  categories?: Category[];
 }
 export default function CreateProductModal({
   open,
   handleClose,
+  categories,
 }: CreateProductModalProps) {
   const [response, setResponse] = useState<FormResponse>();
   const [fileName, setFileName] = useState("");
@@ -112,6 +116,22 @@ export default function CreateProductModal({
               InputLabelProps={{ required: false }}
               fullWidth
             />
+            {!!categories?.length && (
+              <TextField
+                select
+                label="Category (optional)"
+                name="categoryId"
+                defaultValue=""
+                fullWidth
+              >
+                <MenuItem value="">None</MenuItem>
+                {categories.map((cat) => (
+                  <MenuItem key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )}
             <Button
               component="label"
               variant="outlined"

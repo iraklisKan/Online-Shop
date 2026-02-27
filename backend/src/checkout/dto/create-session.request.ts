@@ -1,7 +1,8 @@
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { ArrayMinSize, IsArray, IsNumber } from 'class-validator';
 
 export class CreateSessionRequest {
-  @IsNumber()
-  @IsNotEmpty()
-  productId!: number;
+  @IsArray()
+  @IsNumber({}, { each: true })
+  @ArrayMinSize(1)
+  productIds!: number[];
 }

@@ -1,10 +1,10 @@
 import getProduct from "./get-product";
-import { Grid, Stack, Typography, Box, Chip, Divider, Button } from "@mui/material";
+import { Grid, Stack, Typography, Box, Divider, Button } from "@mui/material";
 import Image from "next/image";
 import { getProductImage } from "../product-image";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Link from "next/link";
-import Checkout from "@/app/checkout/checkout";
+import ProductActions from "./product-actions";
 
 interface SingleProductProps {
   params: Promise<{
@@ -69,7 +69,7 @@ export default async function SingleProduct({ params }: SingleProductProps) {
               variant="h4"
               sx={{ fontWeight: 700, color: "primary.light" }}
             >
-              ${product.price}
+              €{product.price.toFixed(2)}
             </Typography>
 
             <Divider sx={{ borderColor: "rgba(255, 255, 255, 0.06)" }} />
@@ -89,7 +89,7 @@ export default async function SingleProduct({ params }: SingleProductProps) {
               >
                 {product.description}
               </Typography>
-              <Checkout productId={product.id}></Checkout>
+              <ProductActions product={product} />
             </Box>
           </Stack>
         </Grid>

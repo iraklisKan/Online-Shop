@@ -40,9 +40,11 @@ export class ProductsController {
   @Get()
   @UseGuards(JwtAuthGuard)
   async getProducts(
-    @Query('status') status?:string,
+    @Query('status') status?: string,
+    @Query('search') search?: string,
+    @Query('categoryId') categoryId?: number,
   ) {
-    return this.productsService.getProducts(status);
+    return this.productsService.getProducts(status, search, categoryId ? +categoryId : undefined);
   }
 
   @Post(':productId/image')

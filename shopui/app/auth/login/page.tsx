@@ -2,21 +2,13 @@
 
 import NextLink from "next/link";
 import { Stack, TextField, Button, Link, Typography } from "@mui/material";
-import { useActionState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useActionState } from "react";
 import login from "./login";
 
 
 
 export default function Login() {
-  const router = useRouter();
   const [state, formAction] = useActionState(login, { emailError: "", passwordError: "" });
-  
-  useEffect(() => {
-    if (state.success) {
-      router.push("/");
-    }
-  }, [state.success, router]);
 
   return (
     <form action={formAction}>

@@ -41,5 +41,5 @@ export default async function login(
     });
   }
 
-  return { success: true };
+  redirect("/");
 }

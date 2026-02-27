@@ -10,7 +10,7 @@ interface CheckoutProps {
 export default function Checkout({ productId }: CheckoutProps) {
   const handleCheckout = async () => {
     try {
-      const session = await checkoutAction(productId);
+      const session = await checkoutAction([productId]);
       console.log("Session response:", session);
       if (session.error) {
         console.error("Checkout error:", session.error);

@@ -6,6 +6,8 @@ import { Container, CssBaseline } from "@mui/material";
 import Header from "./header/header";
 import authenticated from "./auth/authenticated";
 import logout from "./auth/logout";
+import { cookies } from "next/headers";
+import type { UserRole } from "./auth/auth-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,19 +24,35 @@ export const metadata: Metadata = {
   description: "Discover and shop the best products at Shoppy.",
 };
 
+function parseJwtRole(token?: string): UserRole {
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(
+      Buffer.from(token.split(".")[1], "base64url").toString(),
+    );
+    return payload.role ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const isAuthenticated = await authenticated();
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get("Authentication");
+  const role = parseJwtRole(authCookie?.value);
+
   return (
     <html lang="en" data-scroll-behavior="smooth">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
-        <Providers authenticated={isAuthenticated}>
+        <Providers authenticated={isAuthenticated} role={role}>
           <CssBaseline />
           <Header logout={logout} />
           <Container maxWidth="lg" className={isAuthenticated ? "pt-12 pb-16" : ""}>
